@@ -1,0 +1,15 @@
+.vs/
+.vscode/ipch/
+**/Debug/
+**/Release/
+**/x64/Debug/
+**/x64/Release/
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.ipch
+*.tlog
+*.log
+*.exe
+*.dll

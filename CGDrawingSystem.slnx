@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CGDrawingSystem.vcxproj" Id="38daa6a8-52fe-4e16-8bf9-6a663ccd8959" />
+</Solution>

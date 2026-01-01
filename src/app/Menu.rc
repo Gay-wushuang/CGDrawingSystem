@@ -1,0 +1,150 @@
+#include <windows.h>
+#include "resource.h"
+
+#pragma code_page(65001)  // 指定 UTF-8 编码，解决非 ASCII 字符解析问题
+
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "文件(&F)"
+    BEGIN
+        MENUITEM "清屏(&C)",          ID_FILE_CLEAR
+    END
+    POPUP "基本图形绘制(&G)"
+    BEGIN
+        MENUITEM "DDA 直线(&D)",          ID_BASIC_DDA_LINE
+        MENUITEM "Bresenham直线(&B)",      ID_BASIC_BRESENHAM_LINE
+        MENUITEM "系统函数直线(&S)",      ID_BASIC_SYS_LINE
+        MENUITEM SEPARATOR
+        MENUITEM "Bresenham圆(&C)",        ID_BASIC_CIRCLE
+        MENUITEM "Bresenham椭圆(&E)",      ID_BASIC_ELLIPSE
+        MENUITEM "矩形(&R)",              ID_BASIC_RECT
+        MENUITEM "多边形(&P)",            ID_BASIC_POLYGON
+    END
+
+    POPUP "图形变换(&T)"
+    BEGIN
+        MENUITEM "平移(&M)",              ID_TRANS_TRANSLATE
+        MENUITEM "比例(&S)",              ID_TRANS_SCALE
+        MENUITEM "错切(&H)",              ID_TRANS_SHEAR
+        MENUITEM "对称(&F)",              ID_TRANS_REFLECT
+        MENUITEM "旋转(&R)",              ID_TRANS_ROTATE
+        MENUITEM "复合比例(&C)",          ID_TRANS_SCALE_COMPOSED
+        MENUITEM "复合旋转(&V)",          ID_TRANS_ROTATE_COMPOSED
+        MENUITEM SEPARATOR
+        MENUITEM "插入预置五角星(&S)",    ID_TRANS_ADD_STAR
+    END
+
+    POPUP "自由曲线绘制(&U)"
+    BEGIN
+        MENUITEM "Bezier 曲线(&B)",       ID_CURVE_BEZIER
+        MENUITEM "均匀周期 B 样条(&U)",   ID_CURVE_BSPLINE
+    END
+
+    POPUP "图形裁剪(&L)"
+    BEGIN
+        MENUITEM "直线裁剪(&L)",          ID_CLIP_LINE
+        MENUITEM "多边形裁剪(&P)",        ID_CLIP_POLYGON
+    END
+
+    POPUP "图形填充(&I)"
+    BEGIN
+        MENUITEM "种子填充(&S)",          ID_FILL_SEED
+        MENUITEM "扫描线填充(&A)",  ID_FILL_SCANLINE
+        MENUITEM SEPARATOR
+        MENUITEM "播放演示(&P)",          ID_FILL_PLAY
+        MENUITEM "暂停演示(&U)",          ID_FILL_PAUSE
+        MENUITEM "重置演示(&R)",          ID_FILL_RESET
+    END
+END
+
+IDD_TRANSFORM_TRANSLATE DIALOGEX 0, 0, 200, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "平移变换"
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "X方向平移量:", IDC_STATIC, 10, 10, 60, 15
+    CONTROL         "", IDC_EDIT_DX, "Edit", ES_AUTOHSCROLL, 70, 10, 60, 15
+    LTEXT           "Y方向平移量:", IDC_STATIC, 10, 30, 60, 15
+    CONTROL         "", IDC_EDIT_DY, "Edit", ES_AUTOHSCROLL, 70, 30, 60, 15
+    PUSHBUTTON      "确定", IDOK, 70, 60, 50, 15
+    PUSHBUTTON      "取消", IDCANCEL, 130, 60, 50, 15
+END
+
+IDD_TRANSFORM_SCALE DIALOGEX 0, 0, 200, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "缩放变换"
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "X方向缩放比例:", IDC_STATIC, 10, 10, 70, 15
+    CONTROL         "", IDC_EDIT_SX, "Edit", ES_AUTOHSCROLL, 80, 10, 60, 15
+    LTEXT           "Y方向缩放比例:", IDC_STATIC, 10, 30, 70, 15
+    CONTROL         "", IDC_EDIT_SY, "Edit", ES_AUTOHSCROLL, 80, 30, 60, 15
+    PUSHBUTTON      "确定", IDOK, 70, 60, 50, 15
+    PUSHBUTTON      "取消", IDCANCEL, 130, 60, 50, 15
+END
+
+IDD_TRANSFORM_ROTATE DIALOGEX 0, 0, 200, 80
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "旋转变换"
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "旋转角度(度):", IDC_STATIC, 10, 10, 70, 15
+    CONTROL         "", IDC_EDIT_ANGLE, "Edit", ES_AUTOHSCROLL, 80, 10, 60, 15
+    PUSHBUTTON      "确定", IDOK, 70, 40, 50, 15
+    PUSHBUTTON      "取消", IDCANCEL, 130, 40, 50, 15
+END
+
+IDD_TRANSFORM_SHEAR DIALOGEX 0, 0, 200, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "错切变换"
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "X方向错切量:", IDC_STATIC, 10, 10, 60, 15
+    CONTROL         "", IDC_EDIT_SHX, "Edit", ES_AUTOHSCROLL, 70, 10, 60, 15
+    LTEXT           "Y方向错切量:", IDC_STATIC, 10, 30, 60, 15
+    CONTROL         "", IDC_EDIT_SHY, "Edit", ES_AUTOHSCROLL, 70, 30, 60, 15
+    PUSHBUTTON      "确定", IDOK, 70, 60, 50, 15
+    PUSHBUTTON      "取消", IDCANCEL, 130, 60, 50, 15
+END
+
+IDD_CENTER_POINT DIALOGEX 0, 0, 200, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "中心点设置"
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "X坐标:", IDC_STATIC, 10, 10, 40, 15
+    CONTROL         "", IDC_EDIT_CENTER_X, "Edit", ES_AUTOHSCROLL, 50, 10, 60, 15
+    LTEXT           "Y坐标:", IDC_STATIC, 10, 30, 40, 15
+    CONTROL         "", IDC_EDIT_CENTER_Y, "Edit", ES_AUTOHSCROLL, 50, 30, 60, 15
+    PUSHBUTTON      "确定", IDOK, 70, 60, 50, 15
+    PUSHBUTTON      "取消", IDCANCEL, 130, 60, 50, 15
+END
+
+IDD_TRANSFORM_REFLECT DIALOGEX 0, 0, 200, 120
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "对称变换"
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "关于X轴对称", IDC_RADIO_REFLECT_X, "Button", BS_AUTORADIOBUTTON | WS_GROUP, 20, 20, 80, 15
+    CONTROL         "关于Y轴对称", IDC_RADIO_REFLECT_Y, "Button", BS_AUTORADIOBUTTON, 20, 40, 80, 15
+    CONTROL         "关于原点对称", IDC_RADIO_REFLECT_ORIGIN, "Button", BS_AUTORADIOBUTTON, 20, 60, 80, 15
+    PUSHBUTTON      "确定", IDOK, 70, 90, 50, 15
+    PUSHBUTTON      "取消", IDCANCEL, 130, 90, 50, 15
+END
+
+IDD_FILL_PARAMS DIALOGEX 0, 0, 250, 150
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "填充参数设置"
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "填充起始点 X:", IDC_STATIC, 10, 10, 80, 15
+    CONTROL         "", IDC_EDIT_FILL_X, "Edit", ES_AUTOHSCROLL, 100, 10, 60, 15
+    LTEXT           "填充起始点 Y:", IDC_STATIC, 10, 30, 80, 15
+    CONTROL         "", IDC_EDIT_FILL_Y, "Edit", ES_AUTOHSCROLL, 100, 30, 60, 15
+    LTEXT           "扫描线方向:", IDC_STATIC, 10, 50, 80, 15
+    CONTROL         "", IDC_COMBO_SCAN_DIR, "ComboBox", CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP, 100, 50, 100, 60
+    LTEXT           "水平", IDC_STATIC, 110, 70, 40, 15
+    LTEXT           "垂直", IDC_STATIC, 160, 70, 40, 15
+    PUSHBUTTON      "确定", IDOK, 80, 110, 50, 15
+    PUSHBUTTON      "取消", IDCANCEL, 140, 110, 50, 15
+END
