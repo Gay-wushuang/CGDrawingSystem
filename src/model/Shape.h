@@ -32,6 +32,9 @@ public:
     // 获取图形类型
     virtual ShapeType GetType() const = 0;
 
+    // 返回屏幕坐标下的"图形中心"（用于默认缩放/旋转中心）
+    virtual void GetCenter(int& cx, int& cy) const = 0;
+
 protected:
     Color m_color = Color::Black();  // 图形颜色
 };

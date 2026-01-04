@@ -187,6 +187,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // 文件菜单
         case ID_FILE_CLEAR:
             App::Get().ClearAllShapes();  // 清除所有图形
+            g_FillTool.Reset();  // 同时清除填充结果
             InvalidateRect(hWnd, nullptr, TRUE);
             break;
 
@@ -397,7 +398,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             App& app = App::Get();
             if (app.GetFillType() == 1) // 扫描线填充
             {
-                g_FillTool.UpdateScanlineFillDemo(g_Canvas, 3);  // 每帧填充3行扫描线，较慢但更清晰的演示
+                g_FillTool.UpdateScanlineFillDemo(g_Canvas, 1);  // 每帧 1 行：更像"扫描线"
                 if (!g_FillTool.IsPlaying()) // 检查扫描线填充是否完成
                 {
                     KillTimer(hWnd, TIMER_FILL_DEMO);
@@ -407,7 +408,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 if (g_FillTool.IsPlaying() && g_FillTool.HasFillTask())
                 {
-                    g_FillTool.UpdateFillDemo(g_Canvas, 15);  // 每帧填充15个像素，较慢但更清晰的演示
+                    g_FillTool.UpdateFillDemo(g_Canvas, 120); // 每帧更多像素：扩散感更强
                 }
                 else
                 {
@@ -427,6 +428,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // 清空画布为白色
         g_Canvas.Clear(Color::White());
+        
+        // 先把"已填充像素覆盖层"画出来（否则会被 Clear() 抹掉）
+        g_FillTool.DrawFillOverlay(g_Canvas);
 
         // 绘制坐标系（使用 Canvas::PutPixel）
         g_Axis.Draw(g_Canvas);
@@ -447,6 +451,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         else if (cat == ToolCategory::Clip && g_ClipTool.IsDrawing())
         {
             g_ClipTool.DrawPreview(g_Canvas);
+        }
+
+        // 扫描线演示：画一条当前扫描线光标（蓝色），让它和种子扩散明显不同
+        if (App::Get().GetFillType() == 1 && g_FillTool.IsPlaying() && g_FillTool.HasScanlineFillTask())
+        {
+            int y = g_FillTool.GetScanlineIndex();
+            if (y >= 0 && y < g_Canvas.Height())
+            {
+                for (int x = 0; x < g_Canvas.Width(); ++x)
+                    g_Canvas.PutPixel(x, y, Color::Blue());
+            }
         }
 
         // 将离屏缓冲呈现到窗口

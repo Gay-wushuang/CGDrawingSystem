@@ -62,6 +62,5 @@ void App::SetFillParams(int seedX, int seedY, Color fillColor, Color boundaryCol
     m_fillSeedY = seedY;
     m_fillColor = fillColor;
     m_boundaryColor = boundaryColor;
-    // 默认为种子填充，如果颜色是蓝色则为扫描线填充
-    m_fillType = (fillColor.r == 0 && fillColor.g == 0 && fillColor.b == 255) ? 1 : 0;
+    // m_fillType 不再根据颜色自动修改，只由菜单命令决定
 }

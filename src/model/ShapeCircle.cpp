@@ -38,11 +38,13 @@ void ShapeCircle::Transform(const Matrix3& mat)
     // 累积变换矩阵
     m_transform = mat * m_transform;
     
-    // 检查变换矩阵是否包含剪切操作
+    // 检查变换矩阵是否包含剪切操作或非均匀缩放
     bool hasShear = (abs(mat.m[0][1]) > 1e-6 || abs(mat.m[1][0]) > 1e-6);
+    bool hasNonUniformScale = (!hasShear && abs(mat.m[0][0] - mat.m[1][1]) > 1e-6 && 
+                               abs(mat.m[0][0]) > 1e-6 && abs(mat.m[1][1]) > 1e-6);
     
-    if (hasShear) {
-        // 如果是剪切变换，圆会变成椭圆，需要计算椭圆参数
+    if (hasShear || hasNonUniformScale) {
+        // 如果是剪切变换或非均匀缩放，圆会变成椭圆，需要计算椭圆参数
         // 变换圆上的关键点来确定椭圆形状
         Vec2 rightPoint = mat.Transform(Vec2(worldCenter.x + m_radius, worldCenter.y));
         Vec2 downPoint = mat.Transform(Vec2(worldCenter.x, worldCenter.y + m_radius));
@@ -58,7 +60,7 @@ void ShapeCircle::Transform(const Matrix3& mat)
         m_a = (int)round(new_a);
         m_b = (int)round(new_b);
     } else {
-        // 非剪切变换（平移、旋转、缩放）- 保持为圆形
+        // 均匀缩放或其它保持圆形的变换
         Vec2 rightPoint = mat.Transform(Vec2(worldCenter.x + m_radius, worldCenter.y));
         Vec2 centerRight = mat.Transform(Vec2(worldCenter.x, worldCenter.y));
         

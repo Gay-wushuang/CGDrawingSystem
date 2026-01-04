@@ -22,6 +22,7 @@ public:
     void Transform(const Matrix3& mat) override;
     bool HitTest(int x, int y, int threshold = 5) const override;
     ShapeType GetType() const override { return ShapeType::Curve; }
+    void GetCenter(int& cx, int& cy) const override;
 
 private:
     CurveType m_type;

@@ -16,6 +16,7 @@ public:
     void Transform(const Matrix3& mat) override;
     bool HitTest(int x, int y, int threshold = 5) const override;
     ShapeType GetType() const override { return ShapeType::Circle; }
+    void GetCenter(int& cx, int& cy) const override { cx = m_cx; cy = m_cy; }
 
 private:
     int m_cx, m_cy;  // 圆心坐标

@@ -39,6 +39,10 @@ public:
     bool IsPlaying() const { return m_isPlaying; }
     bool HasFillTask() const { return !m_pixelQueue.empty(); }
     bool HasScanlineFillTask() const { return !m_polygonPoints.empty(); }
+    int GetScanlineIndex() const { return m_scanlineIndex; }
+
+    // 在 WM_PAINT 中调用：绘制已经填充的像素（用于"过程演示"且避免重绘被清空）
+    void DrawFillOverlay(Canvas& canvas) const;
 
 private:
     struct FillTask
@@ -48,12 +52,22 @@ private:
         Color boundaryColor;
     };
 
+    struct FilledPixel
+    {
+        int x, y;
+        Color color;
+    };
+
+    // 辅助函数：精确检测边界
+    bool IsBoundaryPixel(Color pixelColor, Color boundaryColor, Color fillColor) const;
+
     bool m_isPlaying = false;
     std::queue<FillTask> m_fillQueue;
     std::queue<std::pair<int, int>> m_pixelQueue;  // 待填充的像素队列
     Color m_currentFillColor;
     Color m_currentBoundaryColor;
     std::set<std::pair<int, int>> m_visited;
+    std::vector<FilledPixel> m_filledPixels;  // 已填充像素（用于重绘/演示）
     int m_canvasWidth = 0;
     int m_canvasHeight = 0;
     

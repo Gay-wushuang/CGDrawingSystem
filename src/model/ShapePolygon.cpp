@@ -33,6 +33,24 @@ void ShapePolygon::Transform(const Matrix3& mat)
     }
 }
 
+void ShapePolygon::GetCenter(int& cx, int& cy) const
+{
+    if (m_xPoints.empty() || m_yPoints.empty())
+    {
+        cx = 0;
+        cy = 0;
+        return;
+    }
+    
+    int xmin = *std::min_element(m_xPoints.begin(), m_xPoints.end());
+    int xmax = *std::max_element(m_xPoints.begin(), m_xPoints.end());
+    int ymin = *std::min_element(m_yPoints.begin(), m_yPoints.end());
+    int ymax = *std::max_element(m_yPoints.begin(), m_yPoints.end());
+    
+    cx = (xmin + xmax) / 2;
+    cy = (ymin + ymax) / 2;
+}
+
 bool ShapePolygon::HitTest(int x, int y, int threshold) const
 {
     if (m_xPoints.size() < 2)

@@ -115,10 +115,18 @@ void ToolTransform::ExecuteTransform()
     case TransformType::Scale:
         if (TransformDialog::ShowScaleDialog(value1, value2))
         {
-            // 以世界坐标原点为中心进行缩放
-            // 由于形状坐标存储在屏幕坐标系中，需要先转换到世界坐标系
-            // 应用变换，然后再转换回屏幕坐标系
-            mat = Matrix3::Scale(value1, value2, 0.0, 0.0);
+            // 获取图形中心点作为缩放中心
+            int cx, cy;
+            shape->GetCenter(cx, cy);
+            
+            // 将屏幕坐标转换为世界坐标
+            App& app = App::Get();
+            CoordinateConverter& converter = app.GetCoordinateConverter();
+            Vec2 worldCenter;
+            converter.ScreenToWorld(cx, cy, worldCenter);
+            
+            // 以图形中心为缩放中心进行缩放
+            mat = Matrix3::Scale(value1, value2, worldCenter.x, worldCenter.y);
             shape->Transform(mat);
             InvalidateRect(app.GetMainWindow(), nullptr, TRUE);
         }
@@ -128,8 +136,19 @@ void ToolTransform::ExecuteTransform()
         if (TransformDialog::ShowRotateDialog(value1))
         {
             double angleRad = value1 * 3.14159265358979323846 / 180.0;
-            // 以世界坐标原点为中心进行旋转
-            mat = Matrix3::Rotate(angleRad, 0.0, 0.0);
+            
+            // 获取图形中心点作为旋转中心
+            int cx, cy;
+            shape->GetCenter(cx, cy);
+            
+            // 将屏幕坐标转换为世界坐标
+            App& app = App::Get();
+            CoordinateConverter& converter = app.GetCoordinateConverter();
+            Vec2 worldCenter;
+            converter.ScreenToWorld(cx, cy, worldCenter);
+            
+            // 以图形中心为旋转中心进行旋转
+            mat = Matrix3::Rotate(angleRad, worldCenter.x, worldCenter.y);
             shape->Transform(mat);
             InvalidateRect(app.GetMainWindow(), nullptr, TRUE);
         }
@@ -138,8 +157,18 @@ void ToolTransform::ExecuteTransform()
     case TransformType::Shear:
         if (TransformDialog::ShowShearDialog(value1, value2))
         {
-            // 以世界坐标原点为中心进行错切
-            mat = Matrix3::Shear(value1, value2, 0.0, 0.0);
+            // 获取图形中心点作为错切中心
+            int cx, cy;
+            shape->GetCenter(cx, cy);
+            
+            // 将屏幕坐标转换为世界坐标
+            App& app = App::Get();
+            CoordinateConverter& converter = app.GetCoordinateConverter();
+            Vec2 worldCenter;
+            converter.ScreenToWorld(cx, cy, worldCenter);
+            
+            // 以图形中心为错切中心进行错切
+            mat = Matrix3::Shear(value1, value2, worldCenter.x, worldCenter.y);
             
             shape->Transform(mat);
             InvalidateRect(app.GetMainWindow(), nullptr, TRUE);

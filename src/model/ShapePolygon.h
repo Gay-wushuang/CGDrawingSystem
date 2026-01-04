@@ -16,6 +16,7 @@ public:
     void Transform(const Matrix3& mat) override;
     bool HitTest(int x, int y, int threshold = 5) const override;
     ShapeType GetType() const override { return ShapeType::Polygon; }
+    void GetCenter(int& cx, int& cy) const override;
 
     // 获取顶点（用于裁剪）
     void GetPoints(std::vector<int>& xPoints, std::vector<int>& yPoints) const

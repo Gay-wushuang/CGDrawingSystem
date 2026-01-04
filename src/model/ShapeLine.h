@@ -22,6 +22,7 @@ public:
     void Transform(const Matrix3& mat) override;
     bool HitTest(int x, int y, int threshold = 5) const override;
     ShapeType GetType() const override { return ShapeType::Line; }
+    void GetCenter(int& cx, int& cy) const override { cx = (m_x0 + m_x1) / 2; cy = (m_y0 + m_y1) / 2; }
 
     // 获取起点和终点（用于裁剪）
     void GetPoints(int& x0, int& y0, int& x1, int& y1) const

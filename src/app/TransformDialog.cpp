@@ -5,7 +5,7 @@
 
 // 静态成员初始化
 double TransformDialog::s_dx = 0.0, TransformDialog::s_dy = 0.0;
-double TransformDialog::s_sx = 1.0, TransformDialog::s_sy = 1.0;
+double TransformDialog::s_sx = 1.0, TransformDialog::s_sy = 1.0;  // 1.0表示原始大小，>1.0为放大，<1.0为缩小
 double TransformDialog::s_angle = 0.0;
 double TransformDialog::s_shx = 0.0, TransformDialog::s_shy = 0.0;
 
